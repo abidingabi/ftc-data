@@ -59,8 +59,11 @@ if .alliances == null then .alliances = [{}, {}] else . end
 jq $process_scores quals.json  | jq -s '.' | json_to_csv > quals.csv
 jq $process_scores playoffs.json  | jq -s '.' | json_to_csv > playoffs.csv
 
+jq '.teams | .[]' teams.json | jq -s '.' | json_to_csv > teams.csv
+
 rm 'ftcdata.db'
 sqlite3 'ftcdata.db' -cmd '.mode csv' '.import events.csv events'
 sqlite3 'ftcdata.db' -cmd '.mode csv' '.import matches.csv matches'
 sqlite3 'ftcdata.db' -cmd '.mode csv' '.import quals.csv quals'
 sqlite3 'ftcdata.db' -cmd '.mode csv' '.import playoffs.csv playoffs'
+sqlite3 'ftcdata.db' -cmd '.mode csv' '.import teams.csv teams'
