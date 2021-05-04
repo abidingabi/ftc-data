@@ -1,23 +1,10 @@
 #!/usr/bin/env fish
-set BASE_API_URL "https://ftc-api.firstinspires.org/v2.0"
-set YEAR "2020"
 
 function json_to_csv
     jq -r '(map(keys) | add | unique) as $cols | map(. as $row | $cols | map($row[.])) as $rows | $cols, $rows[] | @csv'
 end
 
-function query_api
-    curl -H 'Accept:application/json' -H "Authorization: Basic $FTC_EVENTS_KEY" "$BASE_API_URL/$YEAR/$argv"
-end
-
-query_api 'events' > 'events.json'
 jq '.events' 'events.json'| json_to_csv > 'events.csv'
-
-set played_events (jq -r '.events | .[] | select(.published) | .code' events.json)
-
-for event in $played_events
-    query_api "matches/$event"
-end > matches.json
 
 jq '.matches | .[] | {"actualStartTime": .actualStartTime,
 "description": .description,
@@ -57,14 +44,6 @@ jq '.matches | .[] | {"actualStartTime": .actualStartTime,
 "onField5": .teams[5].onField,
 "modifiedOn": .modifiedOn
 }' 'matches.json' | jq -s '.' | json_to_csv > 'matches.csv'
-
-for event in $played_events
-    query_api "scores/$event/qual"
-end > quals.json
-
-for event in $played_events
-    query_api "scores/$event/playoff"
-end > playoffs.json
 
 rm 'ftcdata.db'
 sqlite3 'ftcdata.db' -cmd '.mode csv' '.import events.csv events'
