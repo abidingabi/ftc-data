@@ -22,3 +22,7 @@ end > quals.json
 for event in $played_events
     query_api "scores/$event/playoff"
 end > playoffs.json
+
+for page in (seq (query_api "teams" | jq '.pageTotal'))
+    query_api "teams?page=$page"
+end > teams.json
