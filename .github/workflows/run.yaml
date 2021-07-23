@@ -3,17 +3,16 @@ name: Run
 on:
   workflow_dispatch:
 jobs:
-  do-the-thing:
+  retrieve-data:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt install -y fish sqlite
+      - run: sudo apt install -y fish
       - shell: bash
         env:
-          FTC_EVENTS_KEY: ${}{ secrets.FTC_EVENTS_KEY }
+          FTC_EVENTS_KEY: ${{ secrets.FTC_EVENTS_KEY }}
         run: ./retrieve-data.fish
-      - run: ./process-data.fish
       - uses: actions/upload-artifact@v2
         with:
-          name: ftc-data
-          path: ftcdata.db
+          name: data-output
+          path: output
