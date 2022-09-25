@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 
 set BASE_API_URL "https://ftc-api.firstinspires.org/v2.0"
-set YEAR "2021"
+set YEAR "2022"
 
 mkdir -p raw-data
 mkdir -p data
